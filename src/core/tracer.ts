@@ -21,8 +21,8 @@ import {
   generateEventId,
 } from "../utils/id.js";
 import { instrumentLLM, instrumentTool } from "../instrumentation/index.js";
+import { SDK_VERSION } from "../version.js";
 
-const SDK_VERSION = "1.0.0";
 export const DEFAULT_ENDPOINT = "https://api.lynxops.co";
 const DEFAULT_MAX_QUEUE_SIZE = 1000;
 const DEFAULT_BATCH_SIZE = 50;

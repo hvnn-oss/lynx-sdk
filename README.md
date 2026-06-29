@@ -7,6 +7,9 @@ LLM calls, tool calls, context loading, policy decisions, retries, errors, and
 the final outcome. The SDK is designed for production services, so event
 delivery failures do not stop your application by default.
 
+This SDK is designed for Node.js server-side runtimes. Browser and edge runtime
+support are not guaranteed yet.
+
 ## Installation
 
 ```bash
@@ -54,6 +57,14 @@ await lynx.run("SupportAgent", async () => {
     reason: "Refund request was accepted",
   });
 });
+```
+
+In serverless functions, CLI scripts, tests, or other short-lived processes,
+call `shutdown()` before the process exits so queued background events can be
+flushed.
+
+```ts
+await lynx.shutdown({ timeoutMs: 1000 });
 ```
 
 By default, events are sent to:
@@ -468,3 +479,18 @@ pnpm test
 
 The SDK is ESM-first and also publishes a CommonJS build through package
 exports.
+
+## Runtime Support
+
+`@lynxops/sdk` supports Node.js 18 and newer. It uses Node runtime APIs such as
+`AsyncLocalStorage`, global `fetch`, `AbortSignal.timeout`, and process
+lifecycle hooks.
+
+## Security
+
+Please report security issues privately to `security@lynxops.co`. See
+`SECURITY.md` for details.
+
+## License
+
+ISC

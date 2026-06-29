@@ -433,6 +433,87 @@ test("semantic APIs capture agent behavior and outcome events", async () => {
   assert.equal(outcome.payload.policyVersion, "policy-1");
 });
 
+test("instrumentLLM captures OpenAI Responses API calls", async () => {
+  const batches = [];
+  globalThis.fetch = async (_url, init) => {
+    batches.push(JSON.parse(init.body));
+    return new Response(JSON.stringify({ success: true }), { status: 200 });
+  };
+
+  const tracer = createTracer();
+  const client = tracer.instrumentLLM({
+    responses: {
+      create: async (input) => ({
+        id: "resp_123",
+        output_text: `answer: ${input.input}`,
+        usage: {
+          input_tokens: 12,
+          output_tokens: 8,
+          total_tokens: 20,
+        },
+      }),
+    },
+  });
+
+  await tracer.run("SupportAgent", async () => {
+    const result = await client.responses.create({
+      model: "gpt-4.1-mini",
+      input: "Summarize this ticket",
+      promptVersion: "support-summary-v3",
+    });
+
+    assert.equal(result.output_text, "answer: Summarize this ticket");
+  });
+  await tracer.shutdown();
+
+  const llmEvents = batches
+    .flat()
+    .filter((event) => event.eventType === "LLM_CALL");
+
+  assert.equal(llmEvents.length, 2);
+  assert.equal(llmEvents[0].payload.path, "responses.create");
+  assert.equal(llmEvents[0].payload.model, "gpt-4.1-mini");
+  assert.equal(llmEvents[0].payload.promptVersion, "support-summary-v3");
+  assert.equal(llmEvents[1].payload.phase, "end");
+  assert.equal(llmEvents[1].payload.usage.totalTokens, 20);
+});
+
+test("instrumentTool captures tool call metadata and result summary", async () => {
+  const batches = [];
+  globalThis.fetch = async (_url, init) => {
+    batches.push(JSON.parse(init.body));
+    return new Response(JSON.stringify({ success: true }), { status: 200 });
+  };
+
+  const tracer = createTracer();
+  const lookupOrder = tracer.instrumentTool(
+    "orders.lookup",
+    async ({ orderId }) => ({ orderId, status: "paid" }),
+    {
+      sideEffect: false,
+      riskLevel: "LOW",
+      externalTarget: "orders-api",
+      toolVersion: "2026-06-29",
+    },
+  );
+
+  await tracer.run("SupportAgent", async () => {
+    const result = await lookupOrder({ orderId: "order_123" });
+    assert.equal(result.status, "paid");
+  });
+  await tracer.shutdown();
+
+  const events = batches.flat();
+  const call = events.find((event) => event.eventType === "TOOL_CALL");
+  const result = events.find((event) => event.eventType === "TOOL_RESULT");
+
+  assert.equal(call.label, "orders.lookup");
+  assert.equal(call.payload.externalTarget, "orders-api");
+  assert.equal(call.payload.toolVersion, "2026-06-29");
+  assert.equal(result.payload.toolName, "orders.lookup");
+  assert.match(result.payload.resultSummary, /order_123/);
+});
+
 test("guardTool records policy events and blocks unsafe calls", async () => {
   const batches = [];
   globalThis.fetch = async (_url, init) => {

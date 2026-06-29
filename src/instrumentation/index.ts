@@ -115,6 +115,7 @@ export function instrumentLLM<T extends object>(
     const pathStr = path.join(".");
     return (
       pathStr === "chat.completions.create" || // OpenAI
+      pathStr === "responses.create" ||        // OpenAI Responses API
       pathStr === "messages.create" ||         // Anthropic (Claude)
       pathStr === "models.generateContent" ||  // Google Gen AI 신규
       pathStr === "generateContent" ||         // Google Generative AI 기존
