@@ -1,0 +1,52 @@
+{
+  "riskPatterns": [
+    { "pattern": "ignore", "flags": "i" },
+    { "pattern": "transfer", "flags": "i" },
+    { "pattern": "payment", "flags": "i" },
+    { "pattern": "delete", "flags": "i" },
+    { "pattern": "system prompt", "flags": "i" },
+    { "pattern": "bypass", "flags": "i" },
+    { "pattern": "shutdown", "flags": "i" },
+    { "pattern": "sudo", "flags": "i" },
+    { "pattern": "admin", "flags": "i" },
+    { "pattern": "leak", "flags": "i" }
+  ],
+  "piiRules": [
+    {
+      "name": "EMAIL",
+      "pattern": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}",
+      "flags": "g",
+      "replacement": "[MASKED_EMAIL]"
+    },
+    {
+      "name": "SSN",
+      "pattern": "\\d{6}-[1-9]\\d{6}",
+      "flags": "g",
+      "replacement": "[MASKED_SSN]"
+    },
+    {
+      "name": "CREDIT_CARD",
+      "pattern": "\\b(?:\\d[ -]*?){13,16}\\b",
+      "flags": "g",
+      "replacement": "[MASKED_CARD]"
+    },
+    {
+      "name": "PHONE",
+      "pattern": "(?:01[016789]-\\d{3,4}-\\d{4})|(?:\\+82-\\d{1,2}-\\d{3,4}-\\d{4})",
+      "flags": "g",
+      "replacement": "[MASKED_PHONE]"
+    },
+    {
+      "name": "JWT",
+      "pattern": "ey[hH]bGciOi[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_=]+\\.?[A-Za-z0-9-_.+/=]*",
+      "flags": "g",
+      "replacement": "[MASKED_JWT]"
+    },
+    {
+      "name": "API_KEY",
+      "pattern": "(?:sk-[a-zA-Z0-9]{32,})|(?:Bearer\\s+[a-zA-Z0-9-_.]+)",
+      "flags": "gi",
+      "replacement": "[MASKED_KEY]"
+    }
+  ]
+}

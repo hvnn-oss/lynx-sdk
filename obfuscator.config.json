@@ -1,0 +1,13 @@
+{
+  "compact": true,
+  "controlFlowFlattening": true,
+  "controlFlowFlatteningThreshold": 0.75,
+  "numbersToExpressions": true,
+  "simplify": true,
+  "stringArray": true,
+  "stringArrayThreshold": 0.75,
+  "splitStrings": true,
+  "splitStringsChunkLength": 10,
+  "renameGlobals": false,
+  "target": "browser"
+}

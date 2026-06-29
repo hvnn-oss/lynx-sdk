@@ -1,0 +1,52 @@
+{
+  "name": "@lynxops/sdk",
+  "version": "1.0.1",
+  "description": "TypeScript SDK for tracing, debugging, and governing AI agent runs with Lynx.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --clean --dts",
+    "obfuscate": "javascript-obfuscator ./dist/index.js --output ./dist/index.js --config obfuscator.config.json && javascript-obfuscator ./dist/index.cjs --output ./dist/index.cjs --config obfuscator.config.json",
+    "build:prod": "pnpm build && pnpm obfuscate",
+    "check-types": "tsc --noEmit",
+    "test": "pnpm build && node --test test/*.mjs"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "observability",
+    "tracing",
+    "debugging",
+    "guardrails",
+    "lynx"
+  ],
+  "author": "Lynx",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "javascript-obfuscator": "^4.1.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hvnn-oss/lynx-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hvnn-oss/lynx-sdk/issues"
+  },
+  "homepage": "https://github.com/hvnn-oss/lynx-sdk#readme"
+}
