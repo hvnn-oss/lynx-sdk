@@ -161,15 +161,15 @@ Use `run()` as the unit of work for one agent execution.
 
 ```ts
 await lynx.run(
-  "InvoiceAgent",
-  async () => {
-    lynx.userInput("Can this invoice be paid?");
-    lynx.decision("verify vendor and payment policy");
-  },
   {
+    agentName: "InvoiceAgent",
     workspaceId: "workspace_123",
     agentId: "agent_invoice",
     sessionId: "session_456",
+  },
+  async () => {
+    lynx.userInput("Can this invoice be paid?");
+    lynx.decision("verify vendor and payment policy");
   },
 );
 ```

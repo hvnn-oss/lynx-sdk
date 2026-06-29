@@ -1,6 +1,6 @@
 {
   "name": "@lynxops/sdk",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "TypeScript SDK for tracing, debugging, and governing AI agent runs with Lynx.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -16,7 +16,6 @@
   "engines": {
     "node": ">=18"
   },
-  "sideEffects": false,
   "files": [
     "dist",
     "CHANGELOG.md",
@@ -38,6 +37,7 @@
   ],
   "author": "Lynx",
   "license": "ISC",
+  "homepage": "https://docs.lynxops.co",
   "devDependencies": {
     "@types/node": "^25.9.1",
     "tsup": "^8.3.5",
@@ -51,7 +51,6 @@
   "bugs": {
     "url": "https://github.com/hvnn-oss/lynx-sdk/issues"
   },
-  "homepage": "https://docs.lynxops.co",
   "publishConfig": {
     "access": "public",
     "provenance": true
